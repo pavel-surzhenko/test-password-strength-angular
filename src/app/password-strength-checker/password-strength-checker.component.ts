@@ -28,17 +28,46 @@ export class PasswordStrengthCheckerComponent {
     return /(?=.*\d)(?=.*[a-z])(?=.*[\W_]).+/i.test(password)
   }
 
-  onPasswordChange() {
+  getPasswordStrength() {
     if (this.password.length > 0 && this.password.length < 8) {
-      this.easySectionColor = this.mediumSectionColor = this.strongSectionColor = 'red';
-    } else if (this.isEasy(this.password)) {
-      this.easySectionColor = 'red';
-      this.mediumSectionColor = this.strongSectionColor = 'gray';
-    } else if (this.isMedium(this.password)) {
-      this.easySectionColor = this.mediumSectionColor = 'yellow';
-      this.strongSectionColor = 'gray';
-    } else if (this.isStrong(this.password)) {
-      this.easySectionColor = this.mediumSectionColor = this.strongSectionColor = 'green';
+      return 'short';
+    }
+    if (this.isStrong(this.password)) {
+      return 'strong';
+    }
+    if (this.isMedium(this.password)) {
+      return 'medium';
+    }
+    if (this.isEasy(this.password)) {
+      return 'easy';
+    }
+
+    return 'default';
+  }
+
+  onPasswordChange() {
+    const passwordStrength = this.getPasswordStrength();
+
+    switch (passwordStrength) {
+      case 'short':
+        this.easySectionColor = this.mediumSectionColor = this.strongSectionColor = 'red';
+        break;
+      case 'default':
+        this.easySectionColor = this.mediumSectionColor = this.strongSectionColor = 'gray';
+        break;
+      case 'easy':
+        this.easySectionColor = 'red';
+        this.mediumSectionColor = this.strongSectionColor = 'gray';
+        break;
+      case 'medium':
+        this.easySectionColor = this.mediumSectionColor = 'yellow';
+        this.strongSectionColor = 'gray';
+        break;
+      case 'strong':
+        this.easySectionColor = this.mediumSectionColor = this.strongSectionColor = 'green';
+        break;
+      default:
+        break;
     }
   }
 }
